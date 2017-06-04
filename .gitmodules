@@ -1,0 +1,24 @@
+[submodule "centos-base"]
+	path = centos-base
+	url = git@github.com:zeroc0d3lab/centos-base.git
+[submodule "centos-base-consul"]
+	path = centos-base-consul
+	url = git@github.com:zeroc0d3lab/centos-base-consul.git
+[submodule "centos-base-consul-lite"]
+	path = centos-base-consul-lite
+	url = git@github.com:zeroc0d3lab/centos-base-consul-lite.git
+[submodule "centos-base-workspace"]
+	path = centos-base-workspace
+	url = git@github.com:zeroc0d3lab/centos-base-workspace.git
+[submodule "centos-base-workspace-lite"]
+	path = centos-base-workspace-lite
+	url = git@github.com:zeroc0d3lab/centos-base-workspace-lite.git
+[submodule "centos-application"]
+	path = centos-application
+	url = git@github.com:zeroc0d3lab/centos-application.git
+[submodule "centos-application-lite"]
+	path = centos-application-lite
+	url = git@github.com:zeroc0d3lab/centos-application-lite.git
+[submodule "centos-ruby"]
+	path = centos-ruby
+	url = git@github.com:zeroc0d3lab/centos-ruby.git
