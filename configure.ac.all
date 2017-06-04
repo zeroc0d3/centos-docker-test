@@ -1,0 +1,104 @@
+# -*- Autoconf -*-
+# Process this file with autoconf to produce a configure script.
+
+AC_PREREQ([2.69])
+AC_INIT([docker-centos], [0.1], [zeroc0d3.team@gmail.com])
+AM_INIT_AUTOMAKE([foreign])
+AM_MAINTAINER_MODE
+AM_EXTRA_RECURSIVE_TARGETS([build pull])
+
+# Checks for programs.
+AC_PROG_INSTALL
+AC_PROG_MAKE_SET
+
+AC_CHECK_PROG(DOCKER, docker, yes, no)
+if test x"$DOCKER" != x"yes" ; then
+    AC_MSG_ERROR([required program 'docker' not found])
+fi
+
+# Checks for libraries.
+
+# Checks for header files.
+
+# Checks for typedefs, structures, and compiler characteristics.
+
+# Checks for library functions.
+
+AC_ARG_VAR(TAG, tag of docker images)
+AC_MSG_CHECKING([tag of docker images])
+if test "x${TAG}" = "x"; then
+    AC_SUBST(TAG, latest)
+fi
+AC_MSG_RESULT([${TAG}])
+
+AC_ARG_VAR(CLEAN_OPTIONS, clean options)
+AC_ARG_VAR(BUILD_OPTIONS, build options)
+AC_ARG_VAR(PULL_OPTIONS, pull options)
+
+AC_CONFIG_FILES([
+    Makefile
+    centos-base/Makefile
+    centos-base-workspace/Makefile
+    centos-application/Makefile
+    centos-build/Makefile
+    centos-build-make/Makefile
+    centos-build-make-gcc/Makefile
+    centos-build-make-terraform/Makefile
+    centos-build-maven/Makefile
+    centos-build-npm/Makefile
+    centos-archiva/Makefile
+    centos-awscli/Makefile
+    centos-cli53/Makefile
+    centos-consul/Makefile
+    centos-dnsmasq/Makefile
+    centos-dockercompose/Makefile
+    centos-dockermachine/Makefile
+    centos-dynamodb/Makefile
+    centos-elasticsearch/Makefile
+    centos-fabric/Makefile
+    centos-git/Makefile
+    centos-haproxy/Makefile
+    centos-hostapd/Makefile
+    centos-java/Makefile
+    centos-jenkins/Makefile
+    centos-jetty/Makefile
+    centos-kibana/Makefile
+    centos-logstash/Makefile
+    centos-mariadb/Makefile
+    centos-nginx/Makefile
+    centos-nodejs/Makefile
+    centos-openssh/Makefile
+    centos-perl/Makefile
+    centos-php/Makefile
+    centos-phpmyadmin/Makefile
+    centos-portainer/Makefile
+    centos-postfix/Makefile
+    centos-postgresql/Makefile
+    centos-python/Makefile
+    centos-rabbitmq/Makefile
+    centos-rabbitmqadmin/Makefile
+    centos-redis/Makefile
+    centos-registry/Makefile
+    centos-rng/Makefile
+    centos-rslsync/Makefile
+    centos-rsyslog/Makefile
+    centos-ruby/Makefile
+    centos-spark/Makefile
+    centos-strongswan/Makefile
+    centos-syncthing/Makefile
+    centos-terraform/Makefile
+    centos-tomcat/Makefile
+    centos-unbound/Makefile
+    centos-zabbix-agent/Makefile
+    centos-zabbix-frontend-php/Makefile
+    centos-zabbix-java-gateway/Makefile
+    centos-zabbix-monitor/Makefile
+    centos-zabbix-proxy-mysql/Makefile
+    centos-zabbix-proxy-pgsql/Makefile
+    centos-zabbix-proxy-sqlite3/Makefile
+    centos-zabbix-server-mysql/Makefile
+    centos-zabbix-server-pgsql/Makefile
+    centos-zabbix-server-sqlite3/Makefile
+])
+
+AC_OUTPUT
