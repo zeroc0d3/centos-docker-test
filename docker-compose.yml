@@ -53,7 +53,7 @@ services:
     build:
       context: ./centos-base-workspace-lite
     ports:
-      - "${WORKSPACE_PORT}:8500"
+      - "${WORKSPACE_PORT_LITE}:8500"
     volumes:
       - /etc/localtime:/etc/localtime:ro
     environment:
@@ -69,7 +69,7 @@ services:
     depends_on:
       - base-workspace-lite
     ports:
-      - "${APPLICATION_PORT}:22"
+      - "${APPLICATION_PORT_LITE}:22"
     volumes_from:
       - base-workspace-lite
     volumes:
