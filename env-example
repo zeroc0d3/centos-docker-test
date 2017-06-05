@@ -1,9 +1,18 @@
 ########################
 #  ENVIRONMENT SETUP
 ########################
-APPLICATION=../
+APPLICATION=/home/zeroc0d3/lab/myrails_bootstrap
 APPLICATION_PORT=2222
 WORKSPACE_PORT=8500
+DATA_SAVE_PATH=.data
+
+#------------------------------
+# PostgreSQL
+#------------------------------
+POSTGRES_DB=default
+POSTGRES_USER=default
+POSTGRES_PASSWORD=secret
+POSTGRES_PORT=5535
 
 ########################
 #  VERSION
@@ -21,7 +30,8 @@ CONSUL_OPTIONS=-server -bootstrap-expect 1 -client 0.0.0.0 -ui    # minimal serv
 ########################
 #  SSH CONFIG
 ########################
-SSH_AUTHORIZED_KEYS="ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC+RISZKH6yJGZkm9Rt00w9I/FT+ykaboRir3QvukinMdPw1wE7rzPJ4spoiO7i7xAszhScBw4P/fhIU/sLf2qy88D8+xjZ9sz+3TMX5s/wBGVvith4E1cmV6PxaVY/czGjl62YCqhcx7EAN5+lkjEQ3B82YSSSGu3jao2cNIcLeNpBiuvtBTitNbo52hpGP38Jf8fvv13tr5VoAAEOrsM5vyZKHD14UiAXOea1sYFulz5MEHnTH5MKucknCeAHlrwgq5e/FSt6gh441PR/aJVvQTnFX9NIkjYxBROn/1L2u8yWWbRcIRfHsAfns3P+cVeWSYO0swYDwFM2QM3RSoVT zeroc0d3@zerohost"
+SSH_AUTHORIZED_KEYS="ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDZsXj6mNFTtNbRuVvQqWGGyuxZsabWYCk4Tr4tfSwue45wxtPhQxfIYWf+pml27qc+fIt7dlEDPQldPU7qCmFG0brxHEMzXjufdsI6H9xAtN6IE7bzxbht9U9OBzLyJUrViEV4wiwpirY2vAG23tfS0vGWubUfrwDpvAG2UDOOfI/+px0suw0Xmj2ENDHyI3VQfHowMLb84C0ZvVG5OLJjsox/SMqNQNWbOzGEecowMYCtrisOWdKxr3BlK1f1luw8y22tOk8LNd4fBmHFmYlnCZwygyCZ4Jm4E4i60uiIiprxJZrJUE2OgGprJHa2tEgh4zcVO1gck+A3a40D7He8tYeVcih/Pk66iBG/+Jq6GTjJrc90dbFjAeDFSkbz6ByBNu5aY6AmNpwfBTzvaAlzpr1i1a8FnaY3o2mAeDBzl3L/niY6o1ODL6qHAVFTPji6Gw5ET+Y2Ya+CgXrnff/DLn8VgyID/vMkGLS341u7nzqx6kb0B19sp77PblKe60hAE33kN5A0WIBpuPe0JAaHZWtYKqRB635q0X7nfOClBOpeUXtAWgqs0SpAsdtIQbO3l0NFnCfR6sREbveiULjYlx/lvCsy6TgZYhrJhT+enNR0XZYTk/ofza6KUbkClW8olGqrSwRwqsLoX0QUgUXxBMJkpKhyCqXqE/lT3wGoUQ== zeroc0d3.team@gmail.com"
 SSH_USER=docker
 SSH_USER_PASSWORD=docker
 SSH_USER_PASSWORD_HASHED=false
+SSH_ROOT_PASSWORD=docker
