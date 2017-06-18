@@ -31,8 +31,9 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ${APPLICATION}:/application
-      - ${SSH_AUTHORIZED_KEYS}:/home/docker/.ssh
+      #- ${SSH_AUTHORIZED_KEYS}:/home/docker/.ssh
     environment:
+      - SSH_AUTHORIZED_KEYS=${SSH_AUTHORIZED_KEYS}
       - SSH_USER=${SSH_USER}
       - SSH_USER_PASSWORD=${SSH_USER_PASSWORD}
       - SSH_USER_PASSWORD_HASHED=${SSH_USER_PASSWORD_HASHED}
@@ -76,8 +77,9 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - ${APPLICATION}:/application
-      - ${SSH_AUTHORIZED_KEYS}:/home/docker/.ssh
+      #- ${SSH_AUTHORIZED_KEYS}:/home/docker/.ssh
     environment:
+      - SSH_AUTHORIZED_KEYS=${SSH_AUTHORIZED_KEYS}
       - SSH_USER=${SSH_USER}
       - SSH_USER_PASSWORD=${SSH_USER_PASSWORD}
       - SSH_USER_PASSWORD_HASHED=${SSH_USER_PASSWORD_HASHED}
@@ -111,7 +113,6 @@ services:
     networks:
       - backend
 
-
 #-------------------------------------------------------------------
 # NETWORK SETUP
 #-------------------------------------------------------------------
@@ -120,7 +121,6 @@ networks:
     driver: "bridge"
   backend:
     driver: "bridge"
-
 
 #-------------------------------------------------------------------
 # VOLUME SETUP
