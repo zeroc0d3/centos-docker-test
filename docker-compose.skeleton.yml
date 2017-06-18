@@ -47,6 +47,50 @@ services:
       - backend
 
 #-------------------------------------------------------------------
+# LITE EDITION
+#-------------------------------------------------------------------
+  base-workspace-lite:
+    build:
+      context: ./centos-base-workspace-lite
+    ports:
+      - "${WORKSPACE_PORT_LITE}:8500"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - CONSUL_VERSION=${CONSUL_VERSION}
+      - CONSULUI_VERSION=${CONSULUI_VERSION}
+      - CONSULTEMPLATE_VERSION=${CONSULTEMPLATE_VERSION}
+      - RUBY_VERSION=${RUBY_VERSION}
+      - CONSUL_OPTIONS=${CONSUL_OPTIONS}              # minimal server options
+
+  application-lite:
+    build:
+      context: ./centos-application-lite
+    depends_on:
+      - base-workspace-lite
+    ports:
+      - "${APPLICATION_PORT_LITE}:22"
+    volumes_from:
+      - base-workspace-lite
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ${APPLICATION}:/application
+    environment:
+      - SSH_AUTHORIZED_KEYS=${SSH_AUTHORIZED_KEYS}
+      - SSH_USER=${SSH_USER}
+      - SSH_USER_PASSWORD=${SSH_USER_PASSWORD}
+      - SSH_USER_PASSWORD_HASHED=${SSH_USER_PASSWORD_HASHED}
+      - SSH_ROOT_PASSWORD=${SSH_ROOT_PASSWORD}
+      - CONSUL_SERVICENAME=openssh                    # consul service name
+      - CONSUL_SERVICETAGS=dev                        # consul service tag
+      - CONSUL_SERVICEPORT=2222                       # consul service port
+      - CONSUL_CHECKTYPE=tcp                          # consul health check type
+    tty: true
+    networks:
+      - frontend
+      - backend
+
+#-------------------------------------------------------------------
 # DATABASE
 #-------------------------------------------------------------------
   postgres:
@@ -79,6 +123,8 @@ networks:
 #-------------------------------------------------------------------
 volumes:
   application:
+    driver: "local"
+  application-lite:
     driver: "local"
   postgres:
     driver: "local"
