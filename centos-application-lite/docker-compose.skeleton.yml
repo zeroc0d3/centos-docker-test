@@ -1,0 +1,65 @@
+version: '2'
+
+services:
+
+#-------------------------------------------------------------------
+# LITE EDITION
+#-------------------------------------------------------------------
+  base-workspace-lite:
+    image: zeroc0d3lab/centos-base-workspace-lite
+    ports:
+      - "${WORKSPACE_PORT}:8500"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - CONSUL_VERSION=${CONSUL_VERSION}
+      - CONSULUI_VERSION=${CONSULUI_VERSION}
+      - CONSULTEMPLATE_VERSION=${CONSULTEMPLATE_VERSION}
+      - CONSUL_OPTIONS=${CONSUL_OPTIONS}              # minimal server options
+
+  application-lite:
+    image: zeroc0d3lab/centos-application-lite
+    ports:
+      - "${APPLICATION_PORT}:22"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ${APPLICATION}:/application
+    environment:
+      - SSH_AUTHORIZED_KEYS=${SSH_AUTHORIZED_KEYS}
+      - SSH_USER=${SSH_USER}
+      - SSH_USER_PASSWORD=${SSH_USER_PASSWORD}
+      - SSH_USER_PASSWORD_HASHED=${SSH_USER_PASSWORD_HASHED}
+      - SSH_ROOT_PASSWORD=${SSH_ROOT_PASSWORD}
+      #- CONSUL_AGENT=application-lite                # consul agent hostname/IP
+      #- CONSUL_PORT=8500                             # consul agent port
+      #- CONSUL_KEYPREFIX=path/prefix/                # consul key prefix path
+      - CONSUL_SERVICENAME=openssh                    # consul service name
+      - CONSUL_SERVICETAGS=dev                        # consul service tag
+      - CONSUL_SERVICEPORT=2222                       # consul service port
+      - CONSUL_CHECKTYPE=tcp                          # consul health check type
+      #- OPENSSH_PASSWORDAUTHENTICATION=no            # enable authentication by password
+      #- OPENSSH_SFTPUSERS=                           # SFTP users to create (comma separated list)
+      #- OPENSSH_SFTPGROUP=sftp                       # SFTP group for users
+      #- OPENSSH_SFTPGID=101                          # GID of SFTP group
+      #- OPENSSH_SFTPCHROOT=1                         # enable chroot for SFTP
+      #- OPENSSH_SFTPCHROOTUSERDIR=public_html        # user directory inside chroot
+    tty: true
+    networks:
+      - frontend
+      - backend
+
+#-------------------------------------------------------------------
+# NETWORK SETUP
+#-------------------------------------------------------------------
+networks:
+  frontend:
+    driver: "bridge"
+  backend:
+    driver: "bridge"
+
+#-------------------------------------------------------------------
+# VOLUME SETUP
+#-------------------------------------------------------------------
+volumes:
+  application-lite:
+    driver: "local"
