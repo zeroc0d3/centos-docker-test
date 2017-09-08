@@ -5,10 +5,10 @@
 export PATH="$HOME/bin:/usr/local/bin:$PATH:$HOME/.local/bin:$PATH"
 
 ### POWELINE FONTS ###
-powerline-daemon -q
-POWERLINE_BASH_CONTINUATION=1
-POWERLINE_BASH_SELECT=1
-. /usr/local/lib/python2.7/dist-packages/powerline/bindings/bash/powerline.sh
+# powerline-daemon -q
+# POWERLINE_BASH_CONTINUATION=1
+# POWERLINE_BASH_SELECT=1
+# . /usr/local/lib/python2.7/dist-packages/powerline/bindings/bash/powerline.sh
 
 # Path to your oh-my-zsh installation.
 export ZSH=$HOME/.oh-my-zsh
@@ -92,3 +92,29 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+
+### rbenv (Ruby) default ###
+export PATH="$HOME/.rbenv/bin:$PATH"
+eval "$(rbenv init -)"
+export PATH="$HOME/.rbenv/plugins/ruby-build/bin:$PATH"
+#export RAILS_ENV=staging
+
+### rvm (Ruby) - alternative ###
+# export PATH="$PATH:$HOME/.rvm/bin"
+# source $HOME/.rvm/scripts/rvm
+# export PATH="$PATH:$HOME/.rvm/bin"
+# source $HOME/.rvm/scripts/rvm
+
+# Set PATH alternatives using this:
+# [[ -s "$HOME/.rvm/scripts/rvm"  ]] && source "$HOME/.rvm/scripts/rvm"
+
+### rvm selector ###
+# function gemdir {
+#   if [[ -z "$1" ]] ; then
+#     echo "gemdir expects a parameter, which should be a valid RVM Ruby selector"
+#   else
+#     rvm "$1"
+#     cd $(rvm gemdir)
+#     pwd
+#   fi
+# }
