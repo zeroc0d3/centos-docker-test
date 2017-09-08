@@ -1,0 +1,33 @@
+version: '2'
+
+services:
+  ruby:
+    build:
+      context: .
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      #- /host/data:/var/consul                       # volume for data
+      - ${APPLICATION}:/application
+    environment:
+      - CONSUL_VERSION=${CONSUL_VERSION}
+      - CONSULUI_VERSION=${CONSULUI_VERSION}
+      - CONSULTEMPLATE_VERSION=${CONSULTEMPLATE_VERSION}
+      - RUBY_VERSION=${RUBY_VERSION}
+    networks:
+      - backend
+
+#-------------------------------------------------------------------
+# NETWORK SETUP
+#-------------------------------------------------------------------
+networks:
+  frontend:
+    driver: "bridge"
+  backend:
+    driver: "bridge"
+
+#-------------------------------------------------------------------
+# VOLUME SETUP
+#-------------------------------------------------------------------
+volumes:
+  ruby:
+    driver: "local"
