@@ -1,7 +1,7 @@
 ###############################
 #  ENVIRONMENT SETUP
 ###############################
-APPLICATION=/home/zeroc0d3/lab/myrails
+APPLICATION=/home/zeroc0d3/lab/myprojects
 DATA_SAVE_PATH=.data
 APPLICATION_PORT=2222
 WORKSPACE_PORT=8500
@@ -23,7 +23,16 @@ CONSULUI_VERSION=0.8.3
 CONSULTEMPLATE_VERSION=0.18.3
 RUBY_VERSION=2.4.1
 
-###############################
+########################
 #  OPTIONAL ARGUMENTS
-###############################
+########################
 CONSUL_OPTIONS=-server -bootstrap-expect 1 -client 0.0.0.0 -ui    # minimal server options
+
+########################
+#  SSH CONFIG
+########################
+SSH_AUTHORIZED_KEYS=/home/zeroc0d3/.ssh/id_rsa.pub
+SSH_USER=docker
+SSH_USER_PASSWORD=docker
+SSH_USER_PASSWORD_HASHED=false
+SSH_ROOT_PASSWORD=docker
