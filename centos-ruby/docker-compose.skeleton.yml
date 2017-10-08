@@ -13,6 +13,7 @@ services:
       - CONSULTEMPLATE_VERSION=${CONSULTEMPLATE_VERSION}
       - RUBY_VERSION=${RUBY_VERSION}
     networks:
+      - frontend
       - backend
 
 #-------------------------------------------------------------------

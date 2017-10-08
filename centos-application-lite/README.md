@@ -49,5 +49,20 @@ This docker image includes:
     ```
     (password: **docker**)
 
+## Docker Compose
+* Copy `.env.example` to `.env`
+* Build & running
+  ```
+  docker-compose build && docker-compose up
+  ```
+* Force recreate container
+  ```
+  docker-compose build && docker-compose up --force-recreate application-lite
+  ```
+* Running container only
+  ```
+  docker-compose up
+  ```
+
 ## License
 GNU General Public License v2

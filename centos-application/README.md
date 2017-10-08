@@ -75,6 +75,26 @@ This docker image includes:
   ```
   :PluginUpdate
   ```
+* Via terminal
+  ```
+  vim +PluginInstall +q
+  vim +PluginUpdate +q
+  ```
+
+## Docker Compose
+* Copy `.env.example` to `.env`
+* Build & running
+  ```
+  docker-compose build && docker-compose up
+  ```
+* Force recreate container
+  ```
+  docker-compose build && docker-compose up --force-recreate application
+  ```
+* Running container only
+  ```
+  docker-compose up
+  ```
 
 ## License
 GNU General Public License v2

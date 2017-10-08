@@ -15,5 +15,20 @@ This docker image includes:
   - [X] gem pg, sequel_pg (run: yum install -y postgresql-libs postgresql-devel)
   - [X] gem rubocop
 
+## Docker Compose
+* Copy `.env.example` to `.env`
+* Build & running
+  ```
+  docker-compose build && docker-compose up
+  ```
+* Force recreate container
+  ```
+  docker-compose build && docker-compose up --force-recreate ruby
+  ```
+* Running container only
+  ```
+  docker-compose up
+  ```
+
 ## License
 GNU General Public License v2

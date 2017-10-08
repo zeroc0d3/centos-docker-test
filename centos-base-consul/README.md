@@ -25,13 +25,33 @@ This docker image includes:
 * composer
 
 ## Notes:
-* Run vim then 
+* Run vim then
   ```
   :PluginInstall
   ```
-* Update plugin vim (vundle) 
+* Update plugin vim (vundle)
   ```
   :PluginUpdate
+  ```
+* Via terminal
+  ```
+  vim +PluginInstall +q
+  vim +PluginUpdate +q
+  ```
+  
+## Docker Compose
+* Copy `.env.example` to `.env`
+* Build & running
+  ```
+  docker-compose build && docker-compose up
+  ```
+* Force recreate container
+  ```
+  docker-compose build && docker-compose up --force-recreate base-consul
+  ```
+* Running container only
+  ```
+  docker-compose up
   ```
 
 ## License

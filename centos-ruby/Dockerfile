@@ -167,7 +167,8 @@ VOLUME ["/application", "/root"]
 # Setup TrueColors (Terminal)
 #-----------------------------------------------------------------------------
 COPY ./rootfs/root/colors/24-bit-color.sh /root/colors/24-bit-color.sh
-RUN ./root/colors/24-bit-color.sh
+RUN chmod +x /root/colors/24-bit-color.sh \
+    ./root/colors/24-bit-color.sh
 
 #-----------------------------------------------------------------------------
 # Finalize (reconfigure)

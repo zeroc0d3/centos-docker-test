@@ -8,5 +8,20 @@ This docker image includes:
 * oh-my-zsh (+ themes)
 * tmux (+ themes)
 
+## Docker Compose
+* Copy `.env.example` to `.env`
+* Build & running
+  ```
+  docker-compose build && docker-compose up
+  ```
+* Force recreate container
+  ```
+  docker-compose build && docker-compose up --force-recreate base-consul-lite
+  ```
+* Running container only
+  ```
+  docker-compose up
+  ```
+
 ## License
 GNU General Public License v2
