@@ -97,7 +97,7 @@ source $ZSH/oh-my-zsh.sh
 # export PATH="$HOME/.rbenv/bin:$PATH"
 # eval "$(rbenv init -)"
 # export PATH="$HOME/.rbenv/plugins/ruby-build/bin:$PATH"
-#export RAILS_ENV=staging
+# export RAILS_ENV=staging
 
 ### rvm (Ruby) - alternative ###
 # export PATH="$PATH:$HOME/.rvm/bin"

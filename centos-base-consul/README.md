@@ -38,7 +38,7 @@ This docker image includes:
   vim +PluginInstall +q
   vim +PluginUpdate +q
   ```
-  
+
 ## Docker Compose
 * Copy `.env.example` to `.env`
 * Build & running
@@ -54,5 +54,23 @@ This docker image includes:
   docker-compose up
   ```
 
+## Environments
+You can run docker-compose for different environment with selected containers
+* Copy `env.sh.example` to `env.sh`
+* Change to execute script
+  ```
+  chmod a+x env.sh
+  ```
+* Change environment in `env.sh` file
+  ```
+  ENV="development"            # (use: "development" or "production" as selected environment)
+  CONTAINER_PRODUCTION="..."   # (selected containers will be run in production environment)
+  CONTAINER_DEVELOPMENT="..."  # (selected containers will be run in development environment)
+  ```
+* Running script
+  ```
+  ./env.sh
+  ```
+
 ## License
-GNU General Public License v2
+[**GNU General Public License v2**](https://github.com/zeroc0d3lab/centos-base-consul/blob/master/LICENSE)
