@@ -70,7 +70,7 @@ Docker CentOS Test (Alpha Version), not ready for production.
 * git pull --recurse-submodules
 
 ## Docker Compose
-* Copy `.env.example` to `.env`
+* Copy `env-example` to `.env`
 * Build & running
   ```
   docker-compose build && docker-compose up

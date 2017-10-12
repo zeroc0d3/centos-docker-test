@@ -9,7 +9,7 @@ This docker image includes:
 * tmux (+ themes)
 
 ## Docker Compose
-* Copy `.env.example` to `.env`
+* Copy `env-example` to `.env`
 * Build & running
   ```
   docker-compose build && docker-compose up

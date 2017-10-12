@@ -17,7 +17,7 @@ This docker image includes:
   - [X] [**others**](https://github.com/zeroc0d3lab/centos-ruby/blob/master/rootfs/root/Gemfile)
 
 ## Docker Compose
-* Copy `.env.example` to `.env`
+* Copy `env-example` to `.env`
 * Build & running
   ```
   docker-compose build && docker-compose up
