@@ -1,25 +1,22 @@
-FROM zeroc0d3lab/centos-base:latest
+FROM zeroc0d3lab/centos-base-consul:latest
 MAINTAINER ZeroC0D3 Team <zeroc0d3.team@gmail.com>
 
 #-----------------------------------------------------------------------------
 # Set Environment
 #-----------------------------------------------------------------------------
-ENV S6_BEHAVIOUR_IF_STAGE2_FAILS=1 \
-    LANG=en_US.UTF-8 \
-    LC_ALL=en_US.UTF-8 \
-    LANGUAGE=en_US.UTF-8 \
-    TERM=xterm \
-    CONSUL_VERSION=0.8.3 \
-    CONSULUI_VERSION=0.8.3 \
-    CONSULTEMPLATE_VERSION=0.18.3
+ENV PATH_HOME=/home/docker \
+    PATH_WORKSPACE=/home/docker/workspace
 
 #-----------------------------------------------------------------------------
-# Set Group & User for 'consul'
+# Set Group & User for 'docker'
 #-----------------------------------------------------------------------------
-RUN mkdir -p /var/lib/consul \
-    && groupadd consul \
-    && useradd -r -g consul consul \
-    && chown -R consul:consul /var/lib/consul
+RUN mkdir -p ${PATH_HOME} \
+    && groupadd docker \
+    && useradd -r -g docker docker \
+    && usermod -aG root docker \
+    && chown -R docker:docker ${PATH_HOME} \
+    && mkdir -p ${PATH_HOME}/git-shell-commands \
+    && chmod 755 ${PATH_HOME}/git-shell-commands
 
 #-----------------------------------------------------------------------------
 # Find Fastest Repo & Update Repo
@@ -28,64 +25,63 @@ RUN yum makecache fast \
     && yum -y update
 
 #-----------------------------------------------------------------------------
-# Install Workspace Dependency
+# Install Workspace Dependency (1)
 #-----------------------------------------------------------------------------
 RUN yum -y install \
            --setopt=tsflags=nodocs \
            --disableplugin=fastestmirror \
          git \
-         nano \
-         zip \
-         unzip \
+         git-core \
          zsh \
          gcc \
+         gcc-c++ \
+         autoconf \
          automake \
          make \
          libevent-devel \
          ncurses-devel \
          glibc-static \
-         git-core \
+         fontconfig \
+
+#-----------------------------------------------------------------------------
+# Install MySQL (MariaDB) Library
+#-----------------------------------------------------------------------------
+         mysql-devel \
+
+#-----------------------------------------------------------------------------
+# Install PostgreSQL Library
+#-----------------------------------------------------------------------------
+### PostgreSQL 9.2 (default)###
+         postgresql-libs \
+         postgresql-devel \
+
+### PostgreSQL 9.6 ###
+    && rpm -iUvh https://yum.postgresql.org/9.6/redhat/rhel-7-x86_64/pgdg-centos96-9.6-3.noarch.rpm \
+    && yum install -y postgresql96-libs postgresql96-server postgresql96-devel \
+
+#-----------------------------------------------------------------------------
+# Install Workspace Dependency (2)
+#-----------------------------------------------------------------------------
+RUN yum -y install \
+           --setopt=tsflags=nodocs \
+           --disableplugin=fastestmirror \
          zlib \
          zlib-devel \
-         gcc-c++ \
          patch \
          readline \
          readline-devel \
          libyaml-devel \
          libffi-devel \
          openssl-devel \
-         make \
          bzip2 \
          bison \
-         autoconf \
-         automake \
          libtool \
-         sqlite-devel \
-         fontconfig \
-
-#-----------------------------------------------------------------------------
-# Install Consul Library
-#-----------------------------------------------------------------------------
-    && curl -sSL https://releases.hashicorp.com/consul/${CONSULUI_VERSION}/consul_${CONSULUI_VERSION}_linux_amd64.zip -o /tmp/consul.zip \
-    && unzip /tmp/consul.zip -d /bin \
-    && rm /tmp/consul.zip \
-    && mkdir -p /var/lib/consului \
-    && curl -sSL https://releases.hashicorp.com/consul/${CONSULUI_VERSION}/consul_${CONSULUI_VERSION}_web_ui.zip -o /tmp/consului.zip \
-    && unzip /tmp/consului.zip -d /var/lib/consului \
-    && rm /tmp/consului.zip \
-    && curl -sSL https://releases.hashicorp.com/consul-template/${CONSULTEMPLATE_VERSION}/consul-template_${CONSULTEMPLATE_VERSION}_linux_amd64.zip -o /tmp/consul-template.zip \
-    && unzip /tmp/consul-template.zip -d /bin \
-    && rm -f /tmp/consul-template.zip \
+         sqlite-devel
 
 #-----------------------------------------------------------------------------
 # Clean Up All Cache
 #-----------------------------------------------------------------------------
-    && yum clean all
-
-#-----------------------------------------------------------------------------
-# Setup Locale UTF-8
-#-----------------------------------------------------------------------------
-RUN ["/usr/bin/localedef", "-i", "en_US", "-f", "UTF-8", "en_US.UTF-8"]
+RUN yum clean all
 
 #-----------------------------------------------------------------------------
 # Download & Install
@@ -145,9 +141,19 @@ RUN git clone https://github.com/Anthony25/gnome-terminal-colors-solarized.git /
 #-----------------------------------------------------------------------------
 # Setup TrueColors (Terminal)
 #-----------------------------------------------------------------------------
-COPY ./rootfs/root/colors/24-bit-color.sh /root/colors/24-bit-color.sh
-RUN chmod a+x /root/colors/24-bit-color.sh \
-    ./root/colors/24-bit-color.sh
+COPY ./rootfs/root/colors/24-bit-color.sh /tmp/24-bit-color.sh
+RUN chmod a+x /tmp/24-bit-color.sh; sync \
+    && ./tmp/24-bit-color.sh
+
+#-----------------------------------------------------------------------------
+# Set PORT Docker Container
+#-----------------------------------------------------------------------------
+EXPOSE 22
+
+#-----------------------------------------------------------------------------
+# Set Volume Docker Workspace Lite
+#-----------------------------------------------------------------------------
+VOLUME [${PATH_HOME}, "/root"]
 
 #-----------------------------------------------------------------------------
 # Finalize (reconfigure)

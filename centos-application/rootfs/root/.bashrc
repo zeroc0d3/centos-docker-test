@@ -153,29 +153,3 @@ if [[ -f $THEME ]]; then
     export DEFAULT_USER=`whoami`
     source $THEME
 fi
-
-### rbenv (Ruby) default ###
-export PATH="$HOME/.rbenv/bin:$PATH"
-eval "$(rbenv init -)"
-export PATH="$HOME/.rbenv/plugins/ruby-build/bin:$PATH"
-#export RAILS_ENV=staging
-
-### rvm (Ruby) - alternative ###
-# export PATH="$PATH:$HOME/.rvm/bin"
-# source $HOME/.rvm/scripts/rvm
-# export PATH="$PATH:$HOME/.rvm/bin"
-# source $HOME/.rvm/scripts/rvm
-
-# Set PATH alternatives using this:
-# [[ -s "$HOME/.rvm/scripts/rvm"  ]] && source "$HOME/.rvm/scripts/rvm"
-
-### rvm selector ###
-# function gemdir {
-#   if [[ -z "$1" ]] ; then
-#     echo "gemdir expects a parameter, which should be a valid RVM Ruby selector"
-#   else
-#     rvm "$1"
-#     cd $(rvm gemdir)
-#     pwd
-#   fi
-# }

@@ -1,14 +1,24 @@
-version: '2'
+version: '3.2'
 
 services:
-  base-workspace-lite:
-    build:
-      context: .
+  consul:
+    image: zeroc0d3lab/centos-consul
+    ports:
+      - "8500:8500"
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      #- /host/data:/var/consul                       # volume for data
     environment:
-      - CONSUL_VERSION=${CONSUL_VERSION}
-      - CONSULUI_VERSION=${CONSULUI_VERSION}
-      - CONSULTEMPLATE_VERSION=${CONSULTEMPLATE_VERSION}
+      - CONSUL_OPTIONS=${CONSUL_OPTIONS}                   # minimal server options
 
+  base-workspace-lite:
+    depends_on:
+      - consul
+    build:
+      context: .
+    ports:
+      - "${WORKSPACE_PORT}:22"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ${DATA_SAVE}/workspace:/home/docker                # volume for data
+    environment:
+      - PATH_WORKSPACE=${PATH_WORKSPACE}

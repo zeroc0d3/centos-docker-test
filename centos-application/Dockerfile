@@ -1,23 +1,25 @@
-FROM zeroc0d3lab/centos-base-consul:latest
+FROM zeroc0d3lab/centos-base-workspace:latest
 MAINTAINER ZeroC0D3 Team <zeroc0d3.team@gmail.com>
 
-# -----------------------------------------------------------------------------
-# Set default environment variables
-# -----------------------------------------------------------------------------
+#-----------------------------------------------------------------------------
+# Set Environment
+#-----------------------------------------------------------------------------
 ENV SSH_AUTHORIZED_KEYS='' \
-	SSH_AUTOSTART_SSHD=true \
-	SSH_AUTOSTART_SSHD_BOOTSTRAP=true \
-	SSH_CHROOT_DIRECTORY='%h' \
-	SSH_INHERIT_ENVIRONMENT=false \
-	SSH_SUDO='ALL=(ALL) ALL' \
-	SSH_USER='docker' \
-	SSH_USER_FORCE_SFTP=false \
-	SSH_USER_HOME='/home/%u'\
-	SSH_USER_ID='1001:1001' \
-	SSH_USER_PASSWORD='docker' \
-	SSH_ROOT_PASSWORD='docker' \
-	SSH_USER_PASSWORD_HASHED=false \
-	SSH_USER_SHELL='/bin/bash'
+    SSH_AUTOSTART_SSHD=true \
+    SSH_AUTOSTART_SSHD_BOOTSTRAP=true \
+    SSH_CHROOT_DIRECTORY='%h' \
+    SSH_INHERIT_ENVIRONMENT=false \
+    SSH_SUDO='ALL=(ALL) ALL' \
+    SSH_USER='docker' \
+    SSH_USER_FORCE_SFTP=false \
+    SSH_USER_HOME='/home/%u'\
+    SSH_USER_ID='1001:1001' \
+    SSH_USER_PASSWORD='docker' \
+    SSH_ROOT_PASSWORD='docker' \
+    SSH_USER_PASSWORD_HASHED=false \
+    SSH_USER_SHELL='/bin/bash' \
+    PATH_HOME=/home/docker \
+    PATH_WORKSPACE=/home/docker/workspace
 
 #-----------------------------------------------------------------------------
 # Find Fastest Repo & Update Repo
@@ -38,11 +40,6 @@ RUN yum -y install \
 # Clean Up All Cache
 #-----------------------------------------------------------------------------
     && yum clean all
-
-#-----------------------------------------------------------------------------
-# Setup Locale UTF-8
-#-----------------------------------------------------------------------------
-RUN ["/usr/bin/localedef", "-i", "en_US", "-f", "UTF-8", "en_US.UTF-8"]
 
 # -----------------------------------------------------------------------------
 # Install supervisord (required to run more than a single process in a container)
@@ -83,13 +80,6 @@ RUN sed -i \
 	/etc/sudoers
 
 #-----------------------------------------------------------------------------
-# Setup TrueColors (Terminal)
-#-----------------------------------------------------------------------------
-COPY ./rootfs/root/colors/24-bit-color.sh /root/colors/24-bit-color.sh
-RUN chmod a+x /root/colors/24-bit-color.sh \
-    ./root/colors/24-bit-color.sh
-
-#-----------------------------------------------------------------------------
 # Finalize (reconfigure)
 #-----------------------------------------------------------------------------
 COPY rootfs/ /
@@ -122,10 +112,11 @@ RUN mkdir -p \
 
 USER root
 #-----------------------------------------------------------------------------
-# Change root Password
+# Change 'root' & 'docker' user Password
 #-----------------------------------------------------------------------------
 # RUN echo 'root:'${SSH_ROOT_PASSWORD} | chpasswd
-RUN echo 'root:docker' | chpasswd
+RUN echo 'root:docker' | chpasswd \
+    echo 'docker:docker' | chpasswd
 
 #-----------------------------------------------------------------------------
 # Generate Public Key
@@ -147,25 +138,23 @@ RUN /usr/bin/ssh-keygen -f $HOME/.ssh/id_rsa.pub -e -m pem > $HOME/.ssh/id_rsa.p
 # Create new public key for host
 RUN /usr/bin/ssh-keygen -A
 
-ONBUILD RUN mkdir -p /home/docker/.ssh \
-            && touch /home/docker/.ssh/authorized_keys \
-            && cat /root/.ssh/authorized_keys > /home/docker/.ssh/authorized_keys \
-            && /usr/bin/ssh-keygen -f /home/docker/.ssh/id_rsa.pub -e -m pem > /home/docker/.ssh/id_rsa.pem \
-            && chmod 700 /home/docker/.ssh \
-            && chmod 600 /home/docker/.ssh/authorized_keys \
-            && chmod 600 /home/docker/.ssh/id_rsa*
-
-#-----------------------------------------------------------------------------
-# Setup TrueColors (Terminal)
-#-----------------------------------------------------------------------------
-COPY ./rootfs/root/colors/24-bit-color.sh /root/colors/24-bit-color.sh
-RUN chmod a+x /root/colors/24-bit-color.sh \
-    ./root/colors/24-bit-color.sh
+RUN mkdir -p /home/docker/.ssh \
+    && touch /home/docker/.ssh/authorized_keys \
+    && cat $HOME/.ssh/id_rsa.pub > /home/docker/.ssh/authorized_keys \
+    && /usr/bin/ssh-keygen -f $HOME/.ssh/id_rsa.pub -e -m pem > /home/docker/.ssh/id_rsa.pem \
+    && chmod 700 /home/docker/.ssh \
+    && chmod 600 /home/docker/.ssh/authorized_keys \
+    && chmod 600 /home/docker/.ssh/id_rsa*
 
 #-----------------------------------------------------------------------------
 # Create Workspace Application Folder
 #-----------------------------------------------------------------------------
-RUN ["mkdir", "-p", "/application"]
+RUN mkdir -p ${PATH_WORKSPACE}
+
+#-----------------------------------------------------------------------------
+# Fixing ownership for 'docker' user
+#-----------------------------------------------------------------------------
+RUN chown -R docker:docker ${PATH_HOME}
 
 #-----------------------------------------------------------------------------
 # Set PORT Docker Container
@@ -175,7 +164,7 @@ EXPOSE 22
 #-----------------------------------------------------------------------------
 # Set Volume Application
 #-----------------------------------------------------------------------------
-VOLUME ["/application", "/root"]
+VOLUME [${PATH_WORKSPACE}, "/root"]
 
 #-----------------------------------------------------------------------------
 # Run Init Docker Container
@@ -183,6 +172,7 @@ VOLUME ["/application", "/root"]
 ENTRYPOINT ["/init"]
 CMD ["/usr/bin/supervisord", "--configuration=/etc/supervisord.conf"]
 
-## NOTE:
 ## *) Run vim then >> :PluginInstall
 ## *) Update plugin vim (vundle) >> :PluginUpdate
+## *) Run in terminal >> vim +PluginInstall +q
+##                       vim +PluginUpdate +q

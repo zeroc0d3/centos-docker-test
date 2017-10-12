@@ -5,42 +5,36 @@ services:
 #-------------------------------------------------------------------
 # ALL FEATURES
 #-------------------------------------------------------------------
-  base-workspace:
+  consul:
     build:
-      context: ./centos-base-workspace
+      context: ./centos-consul
     ports:
-      - "${WORKSPACE_PORT}:8500"
+      - "8500:8500"
     volumes:
       - /etc/localtime:/etc/localtime:ro
     environment:
-      - CONSUL_VERSION=${CONSUL_VERSION}
-      - CONSULUI_VERSION=${CONSULUI_VERSION}
-      - CONSULTEMPLATE_VERSION=${CONSULTEMPLATE_VERSION}
-      - RUBY_VERSION=${RUBY_VERSION}
-      - CONSUL_OPTIONS=${CONSUL_OPTIONS}              # minimal server options
+      - CONSUL_OPTIONS=${CONSUL_OPTIONS}                   # minimal server options
 
   application:
+    depends_on:
+      - consul
     build:
       context: ./centos-application
-    depends_on:
-      - base-workspace
     ports:
       - "${APPLICATION_PORT}:22"
-    volumes_from:
-      - base-workspace
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ${APPLICATION}:/application
+      - ${PATH_APPLICATION}:/home/docker/workspace
     environment:
       - SSH_AUTHORIZED_KEYS=${SSH_AUTHORIZED_KEYS}
       - SSH_USER=${SSH_USER}
       - SSH_USER_PASSWORD=${SSH_USER_PASSWORD}
       - SSH_USER_PASSWORD_HASHED=${SSH_USER_PASSWORD_HASHED}
       - SSH_ROOT_PASSWORD=${SSH_ROOT_PASSWORD}
-      - CONSUL_SERVICENAME=openssh                    # consul service name
-      - CONSUL_SERVICETAGS=dev                        # consul service tag
-      - CONSUL_SERVICEPORT=2222                       # consul service port
-      - CONSUL_CHECKTYPE=tcp                          # consul health check type
+      - CONSUL_SERVICENAME=${CONSUL_SERVICENAME}                             # consul service name
+      - CONSUL_SERVICETAGS=${CONSUL_SERVICETAGS}                             # consul service tag
+      - CONSUL_SERVICEPORT=${CONSUL_SERVICEPORT}                             # consul service port
+      - CONSUL_CHECKTYPE=${CONSUL_CHECKTYPE}                                 # consul health check type
     tty: true
     networks:
       - frontend
@@ -49,42 +43,26 @@ services:
 #-------------------------------------------------------------------
 # LITE EDITION
 #-------------------------------------------------------------------
-  base-workspace-lite:
-    build:
-      context: ./centos-base-workspace-lite
-    ports:
-      - "${WORKSPACE_PORT_LITE}:8500"
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-    environment:
-      - CONSUL_VERSION=${CONSUL_VERSION}
-      - CONSULUI_VERSION=${CONSULUI_VERSION}
-      - CONSULTEMPLATE_VERSION=${CONSULTEMPLATE_VERSION}
-      - RUBY_VERSION=${RUBY_VERSION}
-      - CONSUL_OPTIONS=${CONSUL_OPTIONS}              # minimal server options
-
   application-lite:
+    depends_on:
+      - consul
     build:
       context: ./centos-application-lite
-    depends_on:
-      - base-workspace-lite
     ports:
-      - "${APPLICATION_PORT_LITE}:22"
-    volumes_from:
-      - base-workspace-lite
+      - "${APPLICATION_PORT}:22"
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - ${APPLICATION}:/application
+      - ${PATH_APPLICATION}:/home/docker/workspace
     environment:
       - SSH_AUTHORIZED_KEYS=${SSH_AUTHORIZED_KEYS}
       - SSH_USER=${SSH_USER}
       - SSH_USER_PASSWORD=${SSH_USER_PASSWORD}
       - SSH_USER_PASSWORD_HASHED=${SSH_USER_PASSWORD_HASHED}
       - SSH_ROOT_PASSWORD=${SSH_ROOT_PASSWORD}
-      - CONSUL_SERVICENAME=openssh                    # consul service name
-      - CONSUL_SERVICETAGS=dev                        # consul service tag
-      - CONSUL_SERVICEPORT=2222                       # consul service port
-      - CONSUL_CHECKTYPE=tcp                          # consul health check type
+      - CONSUL_SERVICENAME=${CONSUL_SERVICENAME}                             # consul service name
+      - CONSUL_SERVICETAGS=${CONSUL_SERVICETAGS}                             # consul service tag
+      - CONSUL_SERVICEPORT=${CONSUL_SERVICEPORT}                             # consul service port
+      - CONSUL_CHECKTYPE=${CONSUL_CHECKTYPE}                                 # consul health check type
     tty: true
     networks:
       - frontend

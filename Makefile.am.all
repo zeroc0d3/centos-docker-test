@@ -1,7 +1,10 @@
 SUBDIRS = \
     centos-base \
+    centos-base-consul \
     centos-base-workspace \
-	centos-application \
+    centos-base-workspace-lite \
+    centos-application \
+    centos-application-lite \
     centos-build \
     centos-build-make \
     centos-build-make-gcc \

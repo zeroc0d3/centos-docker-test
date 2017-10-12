@@ -1,90 +1,34 @@
-FROM zeroc0d3lab/centos-base-consul-lite:latest
+FROM zeroc0d3lab/centos-base-workspace-lite:latest
 MAINTAINER ZeroC0D3 Team <zeroc0d3.team@gmail.com>
 
 #-----------------------------------------------------------------------------
 # Set Environment
 #-----------------------------------------------------------------------------
-ENV RUBY_VERSION=2.4.1
+ENV RUBY_VERSION=2.4.2 \
+    PATH_HOME=/home/docker \
+    PATH_WORKSPACE=/home/docker/workspace
 
 #-----------------------------------------------------------------------------
-# Find Fastest Repo & Update Repo
+# Download & Install
+# -) vim
+# -) vundle + themes
 #-----------------------------------------------------------------------------
-RUN yum makecache fast \
-    && yum -y update
+RUN git clone https://github.com/vim/vim.git /root/vim
 
-#-----------------------------------------------------------------------------
-# Install Workspace Dependency
-#-----------------------------------------------------------------------------
-RUN yum -y install \
-           --setopt=tsflags=nodocs \
-           --disableplugin=fastestmirror \
-         git \
-         nano \
-         zip \
-         unzip \
-         zsh \
-         gcc \
-         automake \
-         make \
-         libevent-devel \
-         ncurses-devel \
-         glibc-static \
+RUN cd /root/vim/src \
+    && /bin/sh ./configure \
+    && sudo make \
+    && sudo make install \
+    && sudo mkdir /usr/share/vim \
+    && sudo mkdir /usr/share/vim/vim80/ \
+    && sudo cp -fr /root/vim/runtime/* /usr/share/vim/vim80/ \
+    && git clone https://github.com/zeroc0d3/vim-ide.git /root/vim-ide \
+    && /bin/sh /root/vim-ide/step02.sh
 
-#-----------------------------------------------------------------------------
-# Install MySQL (MariaDB) Library
-#-----------------------------------------------------------------------------
-         mysql-devel \
-
-#-----------------------------------------------------------------------------
-# Install PostgreSQL Library
-#-----------------------------------------------------------------------------
-### PostgreSQL 9.2 (default)###
-         postgresql-libs \
-         postgresql-devel \
-
-### PostgreSQL 9.6 ###
-    && rpm -iUvh https://yum.postgresql.org/9.6/redhat/rhel-7-x86_64/pgdg-centos96-9.6-3.noarch.rpm \
-    && yum install -y postgresql96-libs postgresql96-server postgresql96-devel
-
-#-----------------------------------------------------------------------------
-# Install Ruby Dependency
-#-----------------------------------------------------------------------------
-RUN yum -y install \
-           --setopt=tsflags=nodocs \
-           --disableplugin=fastestmirror \
-         git-core \
-         zlib \
-         zlib-devel \
-         gcc-c++ \
-         patch \
-         readline \
-         readline-devel \
-         libyaml-devel \
-         libffi-devel \
-         openssl-devel \
-         make \
-         bzip2 \
-         bison \
-         autoconf \
-         automake \
-         libtool \
-         sqlite-devel
-
-#-----------------------------------------------------------------------------
-# Install NodeJS
-#-----------------------------------------------------------------------------
-# RUN yum -y install nodejs npm --enablerepo=epel \
-RUN yum -y install https://kojipkgs.fedoraproject.org//packages/http-parser/2.7.1/3.el7/x86_64/http-parser-2.7.1-3.el7.x86_64.rpm nodejs \
-
-#-----------------------------------------------------------------------------
-# Clean Up All Cache
-#-----------------------------------------------------------------------------
-    && yum clean all
-
-#-----------------------------------------------------------------------------
-# Setup Locale UTF-8
-#-----------------------------------------------------------------------------
-RUN ["/usr/bin/localedef", "-i", "en_US", "-f", "UTF-8", "en_US.UTF-8"]
+RUN git clone https://github.com/dracula/vim.git /tmp/themes/dracula \
+    && git clone https://github.com/blueshirts/darcula.git /tmp/themes/darcula \
+    && sudo cp /tmp/themes/dracula/colors/dracula.vim /root/.vim/bundle/vim-colors/colors/dracula.vim \
+    && sudo cp /tmp/themes/darcula/colors/darcula.vim /root/.vim/bundle/vim-colors/colors/darcula.vim
 
 #-----------------------------------------------------------------------------
 # Prepare Install Ruby
@@ -113,40 +57,69 @@ RUN git clone https://github.com/rbenv/rbenv.git /root/.rbenv \
 #     && ./root/.rvm/scripts/rvm use ${RUBY_VERSION} --default
 #     && ./usr/bin/ruby -v
 
+USER root
+#-----------------------------------------------------------------------------
+# Change 'root' & 'docker' user Password
+#-----------------------------------------------------------------------------
+# RUN echo 'root:'${SSH_ROOT_PASSWORD} | chpasswd
+RUN echo 'root:docker' | chpasswd \
+    echo 'docker:docker' | chpasswd
+
 #-----------------------------------------------------------------------------
 # Copy package dependencies in Gemfile
 #-----------------------------------------------------------------------------
-COPY ./rootfs/root/Gemfile /root/Gemfile
-COPY ./rootfs/root/Gemfile.lock /root/Gemfile.lock
+COPY ./rootfs/root/Gemfile /tmp/Gemfile
+COPY ./rootfs/root/Gemfile.lock /tmp/Gemfile.lock
 
 #-----------------------------------------------------------------------------
 # Install Ruby Packages (rbenv/rvm)
 #-----------------------------------------------------------------------------
-COPY ./rootfs/root/gems.sh /root/gems.sh
-RUN chmod a+x /root/gems.sh \
-    && ./root/gems.sh
+COPY ./rootfs/root/gems.sh /tmp/gems.sh
+ONBUILD RUN chmod a+x /tmp/gems.sh; sync \
+            && ./tmp/gems.sh
+
+#-----------------------------------------------------------------------------
+# Generate Public Key
+#-----------------------------------------------------------------------------
+# Create new public key
+RUN /usr/bin/ssh-keygen -t rsa -b 4096 -C "zeroc0d3.team@gmail.com" -f $HOME/.ssh/id_rsa
+
+RUN mkdir -p $HOME/.ssh \
+    && touch $HOME/.ssh/authorized_keys \
+    && chmod 700 $HOME/.ssh \
+    && chmod go-w $HOME $HOME/.ssh \
+    && chmod 600 $HOME/.ssh/authorized_keys \
+    && chown `whoami` $HOME/.ssh/authorized_keys \
+    && cat $HOME/.ssh/id_rsa.pub > $HOME/.ssh/authorized_keys
+
+# Create new pem file from public key
+RUN /usr/bin/ssh-keygen -f $HOME/.ssh/id_rsa.pub -e -m pem > $HOME/.ssh/id_rsa.pem
+
+# Create new public key for host
+RUN /usr/bin/ssh-keygen -A
+
+RUN mkdir -p /home/docker/.ssh \
+    && touch /home/docker/.ssh/authorized_keys \
+    && cat $HOME/.ssh/id_rsa.pub > /home/docker/.ssh/authorized_keys \
+    && /usr/bin/ssh-keygen -f $HOME/.ssh/id_rsa.pub -e -m pem > /home/docker/.ssh/id_rsa.pem \
+    && chmod 700 /home/docker/.ssh \
+    && chmod 600 /home/docker/.ssh/authorized_keys \
+    && chmod 600 /home/docker/.ssh/id_rsa*
 
 #-----------------------------------------------------------------------------
 # Create Workspace Application Folder
 #-----------------------------------------------------------------------------
-RUN ["mkdir", "-p", "/application"]
+RUN mkdir -p ${PATH_WORKSPACE}
 
 #-----------------------------------------------------------------------------
-# Set PORT Docker Container
+# Fixing ownership for 'docker' user
 #-----------------------------------------------------------------------------
-EXPOSE 3000
+RUN chown -R docker:docker ${PATH_HOME}
 
 #-----------------------------------------------------------------------------
-# Set Volume Application
+# Set Volume Docker Workspace
 #-----------------------------------------------------------------------------
-VOLUME ["/application", "/root"]
-
-#-----------------------------------------------------------------------------
-# Setup TrueColors (Terminal)
-#-----------------------------------------------------------------------------
-COPY ./rootfs/root/colors/24-bit-color.sh /root/colors/24-bit-color.sh
-RUN chmod a+x /root/colors/24-bit-color.sh \
-    ./root/colors/24-bit-color.sh
+VOLUME [${PATH_HOME}, "/root"]
 
 #-----------------------------------------------------------------------------
 # Finalize (reconfigure)
@@ -158,3 +131,9 @@ COPY rootfs/ /
 #-----------------------------------------------------------------------------
 ENTRYPOINT ["/init"]
 CMD []
+
+## NOTE:
+## *) Run vim then >> :PluginInstall
+## *) Update plugin vim (vundle) >> :PluginUpdate
+## *) Run in terminal >> vim +PluginInstall +q
+##                       vim +PluginUpdate +q
