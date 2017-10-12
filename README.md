@@ -14,6 +14,7 @@ Docker CentOS Test (Alpha Version), not ready for production.
   - [X] gem mysql2 (run: yum install -y mysql-devel)
   - [X] gem pg, sequel_pg (run: yum install -y postgresql-libs postgresql-devel)
   - [X] gem rubocop
+  - [X] [**others**](https://github.com/zeroc0d3/centos-docker-test/blob/master/centos-application/rootfs/root/Gemfile)
 * npm
   - [X] npm test unit (ChaiJS, TV4, Newman)
 * js package manager
@@ -68,5 +69,38 @@ Docker CentOS Test (Alpha Version), not ready for production.
 ## Pull:
 * git pull --recurse-submodules
 
+## Docker Compose
+* Copy `.env.example` to `.env`
+* Build & running
+  ```
+  docker-compose build && docker-compose up
+  ```
+* Force recreate container
+  ```
+  docker-compose build && docker-compose up --force-recreate consul ruby postgres application
+  ```
+* Running container only
+  ```
+  docker-compose up
+  ```
+
+## Environments
+You can run docker-compose for different environment with selected containers
+* Copy `env.sh.example` to `env.sh`
+* Change to execute script
+  ```
+  chmod a+x env.sh
+  ```
+* Change environment in `env.sh` file
+  ```
+  ENV="development"            # (use: "development" or "production" as selected environment)
+  CONTAINER_PRODUCTION="..."   # (selected containers will be run in production environment)
+  CONTAINER_DEVELOPMENT="..."  # (selected containers will be run in development environment)
+  ```
+* Running script
+  ```
+  ./env.sh
+  ```
+
 ## License
-GNU General Public License v2
+[**GNU General Public License v2**](https://github.com/zeroc0d3/centos-docker-test/blob/master/LICENSE)
