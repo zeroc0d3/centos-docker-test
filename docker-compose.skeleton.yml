@@ -15,6 +15,142 @@ services:
     environment:
       - CONSUL_OPTIONS=${CONSUL_OPTIONS}               # minimal server options
 
+#-------------------------------------------
+# MARIADB
+#-------------------------------------------
+  mariadb:
+    depends_on:
+      - consul
+    build:
+      context: ./mariadb
+    ports:
+      - "${MARIADB_PORT}:3306"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ${DATA_SAVE}/mariadb:/var/lib/mysql                # volume for data
+    environment:
+      - CONSUL_MARIADB_AGENT=${CONSUL_MARIADB_AGENT}       # consul agent hostname/IP
+      #- CONSUL_MARIADB_PORT=8500                          # consul agent port
+      #- CONSUL_MARIADB_KEYPREFIX=path/prefix/             # consul key prefix path
+      - CONSUL_MARIADB_SERVICENAME=mariadb                 # consul service name
+      - CONSUL_MARIADB_SERVICETAGS=dev                     # consul service tag
+      - CONSUL_MARIADB_SERVICEPORT=3306                    # consul service port
+      - CONSUL_MARIADB_CHECKTYPE=tcp                       # consul health check type
+      #- MARIADB_PROFILE=my-small                          # default configuration profile to use (my-small, my-medium ...)
+      - MARIADB_ROOTPASSWORD=${MARIADB_ROOTPASSWORD}       # root password
+      #- MARIADB_ROOTHOSTMASK=${MARIADB_ROOTHOSTMASK}      # root user hostmask (optional)
+      - MARIADB_DATABASE=${MARIADB_DATABASE}               # create database (optional)
+      - MARIADB_USERNAME=${MARIADB_USERNAME}               # grant user name (optional)
+      - MARIADB_PASSWORD=${MARIADB_PASSWORD}               # grant user password (optional)
+      - MARIADB_HOSTMASK=${MARIADB_HOSTMASK}               # grant user hostmask (optional)
+      #- MARIADB_CONFIGSCRIPT=${MARIADB_CONFIGSCRIPT}      # custom configuration script
+    networks:
+      - backend
+
+#-------------------------------------------
+# MONGODB
+#-------------------------------------------
+  mongodb:
+    depends_on:
+      - consul
+    build:
+      context: ./mongodb
+    ports:
+      - "${MONGODB_PORT}:27017"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ${DATA_SAVE}/mongodb:/data/db                       # volume for data
+    environment:
+      - CONSUL_MONGODB_AGENT=${CONSUL_MONGODB_AGENT}       # consul agent hostname/IP
+      #- CONSUL_MONGODB_PORT=8500                          # consul agent port
+      #- CONSUL_MONGODB_KEYPREFIX=path/prefix/             # consul key prefix path
+      - CONSUL_MONGODB_SERVICENAME=mongodb                 # consul service name
+      - CONSUL_MONGODB_SERVICETAGS=dev                     # consul service tag
+      - CONSUL_MONGODB_SERVICEPORT=27017                   # consul service port
+      - CONSUL_MONGODB_CHECKTYPE=tcp                       # consul health check type
+      #- MONGODB_PROFILE=my-small                          # default configuration profile to use (my-small, my-medium ...)
+      #- MONGODB_CONFIGSCRIPT=${MONGODB_CONFIGSCRIPT}      # custom configuration script
+    networks:
+      - backend
+
+#-------------------------------------------
+# NGINX
+#-------------------------------------------
+  nginx:
+    depends_on:
+      - consul
+    build:
+      context: ./nginx
+    ports:
+      - "${NGINX_HTTP_PORT}:80"
+      - "${NGINX_SSL_PORT}:443"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ${DATA_SAVE}/nginx:/var/cache/nginx                          # volume for nginx cache
+      - ${DATA_SAVE}/www:/var/www                                    # volume for data
+    environment:
+      - CONSUL_NGINX_AGENT=consul                                    # consul agent hostname/IP
+      - CONSUL_NGINX_SERVICENAME=nginx                               # consul service name
+      - CONSUL_NGINX_SERVICETAGS=dev                                 # consul service tag
+      - CONSUL_NGINX_SERVICEPORT=${CONSUL_NGINX_SERVICEPORT}         # consul service port
+      - CONSUL_NGINX_CHECKTYPE=tcp                                   # consul health check type
+    networks:
+      - frontend
+      - backend
+
+#-------------------------------------------------------------------
+# POSTGRESQL
+#-------------------------------------------------------------------
+  postgresql:
+    depends_on:
+      - consul
+    build:
+      context: ./postgresql
+    ports:
+      - "${POSTGRESQL_PORT}:5432"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ${DATA_SAVE}/postgres:/var/lib/postgresql                    # volume for data
+    environment:
+      - CONSUL_POSTGRES_AGENT=consul                                 # consul agent hostname/IP
+      #- CONSUL_POSTGRES_PORT=8500                                   # consul agent port
+      #- CONSUL_POSTGRES_KEYPREFIX=path/prefix/                      # consul key prefix path
+      - CONSUL_POSTGRES_SERVICENAME=postgresql                       # consul service name
+      - CONSUL_POSTGRES_SERVICETAGS=dev                              # consul service tag
+      - CONSUL_POSTGRES_SERVICEPORT=${CONSUL_POSTGRES_SERVICEPORT}   # consul service port
+      - CONSUL_POSTGRES_CHECKTYPE=tcp                                # consul health check type
+      - POSTGRESQL_DATABASE=${POSTGRESQL_DATABASE}                   # create database (optional)
+      - POSTGRESQL_USERNAME=${POSTGRESQL_USERNAME}                   # grant user name (optional)
+      - POSTGRESQL_PASSWORD=${POSTGRESQL_PASSWORD}                   # grant user password (optional)
+      - POSTGRESQL_ADDRESS=${POSTGRESQL_ADDRESS}                     # grant user address (optional)
+      #- POSTGRESQL_CONFIGSCRIPT=${POSTGRESQL_CONFIGSCRIPT}          # custom configuration script
+    networks:
+      - backend
+
+#-------------------------------------------------------------------
+# REDIS
+#-------------------------------------------------------------------
+  redis:
+    depends_on:
+      - consul
+    build:
+      context: ./redis
+    ports:
+      - "${REDIS_PORT}:6379"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ${DATA_SAVE}/redis:/var/lib/redis                  # volume for data
+    environment:
+      - CONSUL_REDIS_AGENT=consul                          # consul agent hostname/IP
+      #- CONSUL_REDIS_PORT=8500                            # consul agent port
+      #- CONSUL_REDIS_KEYPREFIX=path/prefix/               # consul key prefix path
+      - CONSUL_REDIS_SERVICENAME=redis                     # consul service name
+      - CONSUL_REDIS_SERVICETAGS=dev                       # consul service tag
+      - CONSUL_REDIS_SERVICEPORT=6379                      # consul service port
+      - CONSUL_REDIS_CHECKTYPE=tcp                         # consul health check type
+    networks:
+      - backend
+
   application:
     depends_on:
       - consul
@@ -69,25 +205,6 @@ services:
       - backend
 
 #-------------------------------------------------------------------
-# DATABASE
-#-------------------------------------------------------------------
-  postgres:
-    build: ./postgres
-    links:
-      - application
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - ${DATA_SAVE}/postgres:/var/lib/postgresql/data
-    ports:
-      - "${POSTGRES_PORT}:5432"
-    environment:
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-    networks:
-      - backend
-
-#-------------------------------------------------------------------
 # NETWORK SETUP
 #-------------------------------------------------------------------
 networks:
@@ -100,9 +217,21 @@ networks:
 # VOLUME SETUP
 #-------------------------------------------------------------------
 volumes:
+  consul:
+    driver: "local"
+  mariadb:
+    driver: "local"
+  mongodb:
+    driver: "local"
+  nginx:
+    driver: "local"
+  postgresql:
+    driver: "local"
+  redis:
+    driver: "local"
+  ruby:
+    driver: "local"
   application:
     driver: "local"
   application-lite:
-    driver: "local"
-  postgres:
     driver: "local"

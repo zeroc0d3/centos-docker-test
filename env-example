@@ -65,9 +65,81 @@ OPENSSH_SFTPCHROOTUSERDIR=public_html
 CONSUL_OPTIONS=-server -bootstrap-expect 1 -client 0.0.0.0 -ui    # minimal server options
 
 # ==============================================
-#  POSTGRESQL
+#   MARIADB
 # ==============================================
-POSTGRES_DB=default
-POSTGRES_USER=default
-POSTGRES_PASSWORD=secret
-POSTGRES_PORT=5435
+CONSUL_MARIADB_AGENT=consul
+# CONSUL_MARIADB_PORT=8500
+# CONSUL_MARIADB_KEYPREFIX=path/prefix/
+CONSUL_MARIADB_SERVICENAME=mariadb
+CONSUL_MARIADB_SERVICETAGS=dev
+CONSUL_MARIADB_SERVICEPORT=3306
+CONSUL_MARIADB_CHECKTYPE=tcp
+# MARIADB_PROFILE=my-small
+MARIADB_ROOTPASSWORD=mariadb
+# MARIADB_ROOTHOSTMASK=172.30.0.%
+MARIADB_DATABASE=mydb
+MARIADB_USERNAME=docker
+MARIADB_PASSWORD=password
+MARIADB_HOSTMASK=172.%.%.%
+# MARIADB_CONFIGSCRIPT=/root/mariadb/config.sh
+MARIADB_PORT=3306
+
+# ==============================================
+#   MONGODB
+# ==============================================
+CONSUL_MONGODB_AGENT=consul
+# CONSUL_MONGODB_PORT=8500
+# CONSUL_MONGODB_EFIX=path/prefix/
+CONSUL_MONGODB_NAME=mongodb
+CONSUL_MONGODB_TAGS=dev
+CONSUL_MONGODB_PORT=27017
+CONSUL_MONGODB_TYPE=tcp
+# MONGODB_FILE=my-small
+MONGODB_WORD=mongodb
+# MONGODB_MASK=172.30.0.%
+MONGODB_BASE=mydb
+MONGODB_NAME=docker
+MONGODB_WORD=password
+MONGODB_MASK=172.%.%.%
+# MONGODB_RIPT=/root/run.sh
+MONGODB_PORT=27017
+
+# ==============================================
+#   NGINX
+# ==============================================
+CONSUL_NGINX_AGENT=consul
+CONSUL_NGINX_SERVICENAME=nginx
+CONSUL_NGINX_SERVICETAGS=dev
+CONSUL_NGINX_SERVICEPORT=80
+CONSUL_NGINX_CHECKTYPE=tcp
+NGINX_HTTP_PORT=8085
+NGINX_SSL_PORT=4431
+
+# ==============================================
+#   POSTGRESQL
+# ==============================================
+CONSUL_POSTGRES_AGENT=consul
+# CONSUL_POSTGRES_PORT=8500
+# CONSUL_POSTGRES_KEYPREFIX=path/prefix/
+CONSUL_POSTGRES_SERVICENAME=postgresql
+CONSUL_POSTGRES_SERVICETAGS=dev
+CONSUL_POSTGRES_SERVICEPORT=5432
+CONSUL_POSTGRES_CHECKTYPE=tcp
+POSTGRESQL_PORT=5432
+POSTGRESQL_DATABASE=mydb
+POSTGRESQL_USERNAME=docker
+POSTGRESQL_PASSWORD=password
+POSTGRESQL_ADDRESS=172.16.0.0/12
+# POSTGRESQL_CONFIGSCRIPT=/root/postgresql/config.sh
+
+# ==============================================
+#   REDIS
+# ==============================================
+CONSUL_REDIS_AGENT=consul
+# CONSUL_REDIS_PORT=8500
+# CONSUL_REDIS_KEYPREFIX=path/prefix/
+CONSUL_REDIS_SERVICENAME=redis
+CONSUL_REDIS_SERVICETAGS=dev
+CONSUL_REDIS_SERVICEPORT=6379
+CONSUL_REDIS_CHECKTYPE=tcp
+REDIS_PORT=6379
