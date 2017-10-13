@@ -38,8 +38,12 @@ AC_ARG_VAR(PULL_OPTIONS, pull options)
 AC_CONFIG_FILES([
     Makefile
     centos-base/Makefile
+    centos-base-consul/Makefile
+    centos-consul/Makefile
     centos-base-workspace/Makefile
+    centos-base-workspace-lite/Makefile
     centos-application/Makefile
+    centos-application-lite/Makefile
     centos-build/Makefile
     centos-build-make/Makefile
     centos-build-make-gcc/Makefile
