@@ -188,6 +188,31 @@ services:
     networks:
       - backend
 
+#-------------------------------------------
+# RUBY
+#-------------------------------------------
+  ruby:
+    depends_on:
+      - consul
+    build:
+      context: ./centos-ruby
+    ports:
+      - "${RUBY_PORT}:22"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ${PATH_APPLICATION}:/home/docker/workspace
+    environment:
+      - CONSUL_RUBY_AGENT=${CONSUL_RUBY_AGENT}             # consul agent hostname/IP
+      #- CONSUL_RUBY_PORT=8500                             # consul agent port
+      #- CONSUL_RUBY_KEYPREFIX=path/prefix/                # consul key prefix path
+      - CONSUL_RUBY_SERVICENAME=ruby                       # consul service name
+      - CONSUL_RUBY_SERVICETAGS=dev                        # consul service tag
+      - CONSUL_RUBY_SERVICEPORT=22                         # consul service port
+      - CONSUL_RUBY_CHECKTYPE=tcp                          # consul health check type
+      - RUBY_VERSION=${RUBY_VERSION}
+    networks:
+      - backend
+
 #-------------------------------------------------------------------
 # APPLICATION
 #-------------------------------------------------------------------
