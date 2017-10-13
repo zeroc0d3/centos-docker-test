@@ -6,4 +6,5 @@ SUBDIRS = \
     centos-base-workspace-lite \
     centos-application \
     centos-application-lite \
-    centos-ruby
+    centos-ruby \
+    centos-nodejs
