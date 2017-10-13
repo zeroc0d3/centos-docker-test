@@ -1,4 +1,7 @@
-/.project
-/docker-compose.yml
-/.env
-/env.sh
+.data
+.env
+.project
+*.log
+*.status
+docker-compose.yml
+env.sh
