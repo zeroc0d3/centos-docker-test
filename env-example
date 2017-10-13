@@ -16,13 +16,15 @@ TERM=xterm
 # ==============================================
 #   BASE-CONSUL (Environments)
 # ==============================================
-BASE_CONSUL_PORT=1234
+CONSUL_BASE_SERVICENAME=base-consul
+CONSUL_BASE_SERVICEPORT=1234
 CONSULTEMPLATE_VERSION=0.19.0
 
 # ==============================================
 #   CONSUL (Environments)
 # ==============================================
 CONSUL_VERSION=0.8.3
+CONSUL_PORT=8501
 
 # ==============================================
 #   WORKSPACE (Environments)
@@ -114,6 +116,21 @@ CONSUL_NGINX_SERVICEPORT=80
 CONSUL_NGINX_CHECKTYPE=tcp
 NGINX_HTTP_PORT=8085
 NGINX_SSL_PORT=4431
+
+# ==============================================
+#   NODEJS
+# ==============================================
+CONSUL_NODEJS_AGENT=consul
+# CONSUL_NODEJS_PORT=8500
+# CONSUL_NODEJS_KEYPREFIX=path/prefix/
+CONSUL_NODEJS_SERVICENAME=nodejs
+CONSUL_NODEJS_SERVICETAGS=dev
+CONSUL_NODEJS_SERVICEPORT=22
+CONSUL_NODEJS_CHECKTYPE=tcp
+NODEJS_PORT=2223
+NODE_VERSION=7.10.1
+NPM_VERSION=4.6.1
+YARN_VERSION=1.1.0
 
 # ==============================================
 #   POSTGRESQL
