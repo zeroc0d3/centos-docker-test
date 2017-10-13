@@ -3201,7 +3201,12 @@ do
   case $ac_config_target in
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
     "centos-base/Makefile") CONFIG_FILES="$CONFIG_FILES centos-base/Makefile" ;;
+    "centos-base-consul/Makefile") CONFIG_FILES="$CONFIG_FILES centos-base-consul/Makefile" ;;
+    "centos-consul/Makefile") CONFIG_FILES="$CONFIG_FILES centos-consul/Makefile" ;;
     "centos-base-workspace/Makefile") CONFIG_FILES="$CONFIG_FILES centos-base-workspace/Makefile" ;;
+    "centos-base-workspace-lite/Makefile") CONFIG_FILES="$CONFIG_FILES centos-base-workspace-lite/Makefile" ;;
+    "centos-application/Makefile") CONFIG_FILES="$CONFIG_FILES centos-application/Makefile" ;;
+    "centos-application-lite/Makefile") CONFIG_FILES="$CONFIG_FILES centos-application-lite/Makefile" ;;
     "centos-build/Makefile") CONFIG_FILES="$CONFIG_FILES centos-build/Makefile" ;;
     "centos-build-make/Makefile") CONFIG_FILES="$CONFIG_FILES centos-build-make/Makefile" ;;
     "centos-build-make-gcc/Makefile") CONFIG_FILES="$CONFIG_FILES centos-build-make-gcc/Makefile" ;;
