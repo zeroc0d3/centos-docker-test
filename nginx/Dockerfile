@@ -1,4 +1,4 @@
-FROM dockerlab/base-consul:latest
+FROM bhuisgen/alpine-base-consul:latest
 MAINTAINER ZeroC0D3 Team <zeroc0d3.team@gmail.com>
 
 RUN mkdir -p /var/www \
