@@ -119,7 +119,7 @@ RUN chown -R docker:docker ${PATH_HOME}
 #-----------------------------------------------------------------------------
 # Set Volume Docker Workspace
 #-----------------------------------------------------------------------------
-VOLUME [${PATH_HOME}, "/root"]
+VOLUME ["/home/docker", "/home/docker/workspace", "/root"]
 
 #-----------------------------------------------------------------------------
 # Finalize (reconfigure)
