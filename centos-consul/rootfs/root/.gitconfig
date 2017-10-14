@@ -1,5 +1,0 @@
-[user]
-	email = <your_git_email>
-	name = <your_git_account_name>
-[push]
-	default = simple
