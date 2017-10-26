@@ -4,7 +4,7 @@ services:
   base-consul:
     image: zeroc0d3lab/centos-base-consul
     ports:
-      - "${BASE_CONSUL_PORT}:1234"
+      - "${BASE_CONSUL_PORT}:2220"
     volumes:
       - /etc/localtime:/etc/localtime:ro
     environment:

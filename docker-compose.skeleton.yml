@@ -136,6 +136,33 @@ services:
       - backend
 
 #-------------------------------------------------------------------
+# NODEJS
+#-------------------------------------------------------------------
+  nodejs:
+    depends_on:
+      - consul
+    build:
+      context: ./centos-nodejs
+    ports:
+      - "${NODEJS_PORT}:22"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ${PATH_APPLICATION}:/home/docker/workspace
+    environment:
+      - CONSUL_NODEJS_AGENT=${CONSUL_NODEJS_AGENT}         # consul agent hostname/IP
+      #- CONSUL_NODEJS_PORT=8500                           # consul agent port
+      #- CONSUL_NODEJS_KEYPREFIX=path/prefix/              # consul key prefix path
+      - CONSUL_NODEJS_SERVICENAME=nodejs                   # consul service name
+      - CONSUL_NODEJS_SERVICETAGS=dev                      # consul service tag
+      - CONSUL_NODEJS_SERVICEPORT=22                       # consul service port
+      - CONSUL_NODEJS_CHECKTYPE=tcp                        # consul health check type
+      - NODE_VERSION=${NODE_VERSION}
+      - NPM_VERSION=${NPM_VERSION}
+      - YARN_VERSION=${YARN_VERSION}
+    networks:
+      - backend
+
+#-------------------------------------------------------------------
 # POSTGRESQL
 #-------------------------------------------------------------------
   postgresql:
@@ -210,6 +237,33 @@ services:
       - CONSUL_RUBY_SERVICEPORT=22                         # consul service port
       - CONSUL_RUBY_CHECKTYPE=tcp                          # consul health check type
       - RUBY_VERSION=${RUBY_VERSION}
+    networks:
+      - backend
+
+#-------------------------------------------------------------------
+# VIM
+#-------------------------------------------------------------------
+  vim:
+    depends_on:
+      - consul
+    build:
+      context: ./centos-vim
+    ports:
+      - "${VIM_PORT}:22"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ${PATH_APPLICATION}:/home/docker/workspace
+    environment:
+      - VIM_VERSION=${VIM_VERSION}
+      - LUA_VERSION=${LUA_VERSION}
+      - LUAROCKS_VERSION=${LUAROCKS_VERSION}
+      - CONSUL_VIM_AGENT=${CONSUL_VIM_AGENT}               # consul agent hostname/IP
+      #- CONSUL_VIM_PORT=8500                              # consul agent port
+      #- CONSUL_VIM_EFIX=path/prefix/                      # consul key prefix path
+      - CONSUL_VIM_NAME=vim                                # consul service name
+      - CONSUL_VIM_TAGS=dev                                # consul service tag
+      - CONSUL_VIM_PORT=22                                 # consul service port
+      - CONSUL_VIM_TYPE=tcp                                # consul health check type
     networks:
       - backend
 
@@ -293,6 +347,8 @@ volumes:
   redis:
     driver: "local"
   ruby:
+    driver: "local"
+  vim:
     driver: "local"
   application:
     driver: "local"

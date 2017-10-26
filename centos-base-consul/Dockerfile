@@ -4,7 +4,7 @@ MAINTAINER ZeroC0D3 Team <zeroc0d3.team@gmail.com>
 #-----------------------------------------------------------------------------
 # Set Environment
 #-----------------------------------------------------------------------------
-ENV CONSULTEMPLATE_VERSION=0.19.0
+ENV CONSULTEMPLATE_VERSION=0.19.3
 
 #-----------------------------------------------------------------------------
 # Set Group & User for 'consul'
@@ -18,26 +18,34 @@ RUN mkdir -p /var/lib/consul \
 #-----------------------------------------------------------------------------
 # Install Consul Template Library
 #-----------------------------------------------------------------------------
-RUN curl -sSL https://releases.hashicorp.com/consul-template/${CONSULTEMPLATE_VERSION}/consul-template_${CONSULTEMPLATE_VERSION}_linux_amd64.zip -o /tmp/consul-template.zip \
-    && unzip /tmp/consul-template.zip -d /bin \
-    && rm -f /tmp/consul-template.zip
+RUN curl -sSL https://releases.hashicorp.com/consul-template/${CONSULTEMPLATE_VERSION}/consul-template_${CONSULTEMPLATE_VERSION}_linux_amd64.zip -o /opt/consul-template.zip \
+    && unzip /opt/consul-template.zip -d /bin \
+    && rm -f /opt/consul-template.zip
 
 #-----------------------------------------------------------------------------
 # Setup TrueColors (Terminal)
 #-----------------------------------------------------------------------------
-COPY ./rootfs/root/colors/24-bit-color.sh /tmp/24-bit-color.sh
-RUN chmod a+x /tmp/24-bit-color.sh; sync \
-    && ./tmp/24-bit-color.sh
+COPY ./rootfs/root/colors/24-bit-color.sh /opt/24-bit-color.sh
+RUN chmod a+x /opt/24-bit-color.sh; sync \
+    && sudo /bin/sh /opt/24-bit-color.sh
 
 #-----------------------------------------------------------------------------
 # Set PORT Docker Container
 #-----------------------------------------------------------------------------
-EXPOSE 1234
+EXPOSE 2220
 
 #-----------------------------------------------------------------------------
 # Finalize (reconfigure)
 #-----------------------------------------------------------------------------
 COPY rootfs/ /
+
+#-----------------------------------------------------------------------------
+# Cleanup 'root' folder
+#-----------------------------------------------------------------------------
+RUN rm -f /root/*.tar.gz \
+    && rm -f /root/*.zip \
+    && rm -f /opt/*.tar.gz \
+    && rm -f /opt/*.zip
 
 #-----------------------------------------------------------------------------
 # Check Docker Container

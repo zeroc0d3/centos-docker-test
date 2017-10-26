@@ -154,28 +154,25 @@ if [[ -f $THEME ]]; then
     source $THEME
 fi
 
+### Path Ruby RBENV / RVM ###
+export RBENV_ROOT="$HOME/.rbenv"
+export RVM_ROOT="/usr/local/rvm"
+
 ### rbenv (Ruby) default ###
-#export PATH="$HOME/.rbenv/bin:$PATH"
-#eval "$(rbenv init -)"
-#export PATH="$HOME/.rbenv/plugins/ruby-build/bin:$PATH"
-#export RAILS_ENV=staging
+if [ -d "$RBENV_ROOT" ] 
+then
+  export PATH="$RBENV_ROOT/bin:${PATH}"
+  eval "$(rbenv init -)"
+  export PATH="$RBENV_ROOT/plugins/ruby-build/bin:$PATH"
+  # export RAILS_ENV=staging
+else
+  ### rvm (Ruby) - alternative ###
+  if [ -d "$RVM_ROOT" ] 
+  then
+    export PATH="$PATH:$RVM_ROOT/bin"
+    source $RVM_ROOT/scripts/rvm
 
-### rvm (Ruby) - alternative ###
-# export PATH="$PATH:$HOME/.rvm/bin"
-# source $HOME/.rvm/scripts/rvm
-# export PATH="$PATH:$HOME/.rvm/bin"
-# source $HOME/.rvm/scripts/rvm
-
-# Set PATH alternatives using this:
-# [[ -s "$HOME/.rvm/scripts/rvm"  ]] && source "$HOME/.rvm/scripts/rvm"
-
-### rvm selector ###
-# function gemdir {
-#   if [[ -z "$1" ]] ; then
-#     echo "gemdir expects a parameter, which should be a valid RVM Ruby selector"
-#   else
-#     rvm "$1"
-#     cd $(rvm gemdir)
-#     pwd
-#   fi
-# }
+    # Set PATH alternatives using this:
+    [[ -s "$RVM_ROOT/scripts/rvm"  ]] && source "$RVM_ROOT/scripts/rvm"
+  fi 
+fi

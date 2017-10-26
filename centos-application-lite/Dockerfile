@@ -80,10 +80,13 @@ RUN sed -i \
 	/etc/sudoers
 
 #-----------------------------------------------------------------------------
-# Finalize (reconfigure)
+# Set Configuration
 #-----------------------------------------------------------------------------
 COPY rootfs/ /
 
+#-----------------------------------------------------------------------------
+# Setup SSHD & Supervisord
+#-----------------------------------------------------------------------------
 RUN mkdir -p \
 		/etc/supervisord.d/ \
 	&& cp -pf \
@@ -116,13 +119,13 @@ USER root
 #-----------------------------------------------------------------------------
 # RUN echo 'root:'${SSH_ROOT_PASSWORD} | chpasswd
 RUN echo 'root:docker' | chpasswd \
-    echo 'docker:docker' | chpasswd
+    && echo 'docker:docker' | chpasswd
 
 #-----------------------------------------------------------------------------
 # Generate Public Key
 #-----------------------------------------------------------------------------
 # Create new public key
-RUN /usr/bin/ssh-keygen -t rsa -b 4096 -C "zeroc0d3.team@gmail.com" -f $HOME/.ssh/id_rsa
+RUN /usr/bin/ssh-keygen -t rsa -b 4096 -C "zeroc0d3.team@gmail.com" -f $HOME/.ssh/id_rsa -q -N ""; sync
 
 RUN mkdir -p $HOME/.ssh \
     && touch $HOME/.ssh/authorized_keys \
@@ -157,14 +160,22 @@ RUN mkdir -p ${PATH_WORKSPACE}
 RUN chown -R docker:docker ${PATH_HOME}
 
 #-----------------------------------------------------------------------------
+# Cleanup 'root' folder
+#-----------------------------------------------------------------------------
+RUN rm -f /root/*.tar.gz \
+    && rm -f /root/*.zip \
+    && rm -f /opt/*.tar.gz \
+    && rm -f /opt/*.zip
+
+#-----------------------------------------------------------------------------
 # Set PORT Docker Container
 #-----------------------------------------------------------------------------
 EXPOSE 22
 
 #-----------------------------------------------------------------------------
-# Set Volume Application
+# Set Volume Docker Workspace
 #-----------------------------------------------------------------------------
-VOLUME ["/home/docker", "/home/docker/workspace", "/root"]
+VOLUME [${PATH_WORKSPACE}]
 
 #-----------------------------------------------------------------------------
 # Run Init Docker Container
