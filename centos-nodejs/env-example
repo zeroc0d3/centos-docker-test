@@ -25,10 +25,15 @@ CONSULTEMPLATE_VERSION=0.19.3
 CONSUL_VERSION=1.0.0
 
 # ==============================================
-#   NODEJS
+#   APPLICATION (Environments)
 # ==============================================
 PATH_HOME=/home/docker
 PATH_WORKSPACE=/home/docker/workspace
+PATH_APPLICATION=/home/docker/workspace
+
+# ==============================================
+#   NODEJS
+# ==============================================
 CONSUL_NODEJS_AGENT=consul
 # CONSUL_NODEJS_PORT=8500
 # CONSUL_NODEJS_KEYPREFIX=path/prefix/

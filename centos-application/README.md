@@ -24,7 +24,8 @@ This docker image includes:
   - [X] grunt
   - [X] gulp
   - [X] yeoman
-* composer
+* composer (dependency manager for PHP)
+* python 3.5
 
 ## Configuration:
 * Generate ssh key for your access:

@@ -25,12 +25,17 @@ CONSULTEMPLATE_VERSION=0.19.3
 CONSUL_VERSION=1.0.0
 
 # ==============================================
+#   APPLICATION (Environments)
+# ==============================================
+PATH_HOME=/home/docker
+PATH_WORKSPACE=/home/docker/workspace
+PATH_APPLICATION=/home/docker/workspace
+
+# ==============================================
 #   RUBY (Environments)
 # ==============================================
 RUBY_VERSION=2.4.2
 RUBY_PACKAGE=rbenv
-PATH_HOME=/home/docker
-PATH_WORKSPACE=/home/docker/workspace
 RUBY_PORT=2222
 
 # ==============================================

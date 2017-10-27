@@ -21,7 +21,7 @@ RUN yum makecache fast \
     && yum -y update
 
 #-----------------------------------------------------------------------------
-# Install Workspace Dependency
+# Install Vim Dependency
 #-----------------------------------------------------------------------------
 RUN yum -y install \
       --setopt=tsflags=nodocs \
@@ -34,37 +34,28 @@ RUN yum -y install \
         ncurse-devel \
         lua-devel \ 
         lzo-devel \
-        vim* \
+        vim* 
 
 #-----------------------------------------------------------------------------
 # Clean Up All Cache
 #-----------------------------------------------------------------------------
-    && yum clean all
+RUN yum clean all
 
 #-----------------------------------------------------------------------------
 # Prepare Install Ruby
 # -) copy .zshrc to /root
 # -) copy .bashrc to /root
 #-----------------------------------------------------------------------------
-COPY ./rootfs/root/.zshrc /root/.zshrc
-COPY ./rootfs/root/.bashrc /root/.bashrc
-COPY ./rootfs/opt/ruby.sh /etc/profile.d/ruby.sh
-COPY ./rootfs/opt/install_ruby.sh /opt/install_ruby.sh
-COPY ./rootfs/opt/reload_shell.sh /opt/reload_shell.sh
-# RUN exec $SHELL
-# RUN sudo /bin/sh /opt/install_ruby.sh
+# RUN git clone https://github.com/zeroc0d3/ruby-installation /opt/ruby_installer 
 
-#-----------------------------------------------------------------------------
-# Copy package dependencies in Gemfile
-#-----------------------------------------------------------------------------
-COPY ./rootfs/root/Gemfile /opt/Gemfile
-COPY ./rootfs/root/Gemfile.lock /opt/Gemfile.lock
+# COPY ./rootfs/root/.zshrc /root/.zshrc
+# COPY ./rootfs/root/.bashrc /root/.bashrc
+# RUN sudo /bin/sh /opt/ruby_installer/install_ruby.sh
 
 #-----------------------------------------------------------------------------
 # Install Ruby Packages (rbenv/rvm)
 #-----------------------------------------------------------------------------
-COPY ./rootfs/root/gems.sh /opt/gems.sh
-# RUN sudo /bin/sh /opt/gems.sh
+# RUN sudo /bin/sh /opt/ruby_installer/gems.sh
 
 #-----------------------------------------------------------------------------
 # Download & Install
@@ -75,6 +66,18 @@ COPY ./rootfs/root/gems.sh /opt/gems.sh
 #-----------------------------------------------------------------------------
 COPY ./rootfs/opt/install_vim.sh /opt/install_vim.sh
 # RUN sudo /bin/sh /opt/install_vim.sh
+    
+#-----------------------------------------------------------------------------
+# Install Python 3.5
+#-----------------------------------------------------------------------------
+# RUN yum -y install https://centos7.iuscommunity.org/ius-release.rpm \
+#     && yum -y update \
+#     && yum -y install python35u python35u-libs python35u-devel python35u-pip 
+
+#-----------------------------------------------------------------------------
+# Clean Up All Cache
+#-----------------------------------------------------------------------------
+# RUN yum clean all
 
 #-----------------------------------------------------------------------------
 # Install Lua
@@ -130,12 +133,14 @@ RUN tar zcvf vim.tar.gz /root/vim /root/.vim \
 COPY rootfs/ /
 
 #-----------------------------------------------------------------------------
-# Cleanup 'root' folder
+# Cleanup 'root', 'opt' & 'tmp' folder
 #-----------------------------------------------------------------------------
 RUN rm -f /root/*.tar.gz \
     && rm -f /root/*.zip \
     && rm -f /opt/*.tar.gz \
-    && rm -f /opt/*.zip
+    && rm -f /opt/*.zip \
+    && rm -f /tmp/*.tar.gz \
+    && rm -f /tmp/*.zip 
 
 #-----------------------------------------------------------------------------
 # Create Workspace Application Folder

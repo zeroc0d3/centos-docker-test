@@ -268,6 +268,31 @@ services:
       - backend
 
 #-------------------------------------------------------------------
+# PYTHON
+#-------------------------------------------------------------------
+  python:
+    depends_on:
+      - consul
+    build:
+      context: ./centos-python
+    ports:
+      - "${PYTHON_PORT}:22"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ${PATH_APPLICATION}:/home/docker/workspace
+    environment:
+      - CONSUL_PYTHON_AGENT=${CONSUL_PYTHON_AGENT}         # consul agent hostname/IP
+      #- CONSUL_PYTHON_PORT=8500                           # consul agent port
+      #- CONSUL_PYTHON_KEYPREFIX=path/prefix/              # consul key prefix path
+      - CONSUL_PYTHON_SERVICENAME=python                   # consul service name
+      - CONSUL_PYTHON_SERVICETAGS=dev                      # consul service tag
+      - CONSUL_PYTHON_SERVICEPORT=22                       # consul service port
+      - CONSUL_PYTHON_CHECKTYPE=tcp                        # consul health check type
+    networks:
+      - frontend
+      - backend
+
+#-------------------------------------------------------------------
 # APPLICATION
 #-------------------------------------------------------------------
   application:
@@ -349,6 +374,8 @@ volumes:
   ruby:
     driver: "local"
   vim:
+    driver: "local"
+  python:
     driver: "local"
   application:
     driver: "local"

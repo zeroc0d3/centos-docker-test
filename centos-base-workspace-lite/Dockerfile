@@ -161,7 +161,7 @@ RUN chmod a+x /opt/24-bit-color.sh; sync \
     && sudo /bin/sh /opt/24-bit-color.sh
 
 #-----------------------------------------------------------------------------
-# Cleanup 'root' folder
+# Cleanup 'root', 'opt' & 'tmp' folder
 #-----------------------------------------------------------------------------
 RUN rm -f /root/*.tar.gz
 
@@ -171,12 +171,14 @@ RUN rm -f /root/*.tar.gz
 COPY rootfs/ /
 
 #-----------------------------------------------------------------------------
-# Cleanup 'root' folder
+# Cleanup 'root', 'opt' & 'tmp' folder
 #-----------------------------------------------------------------------------
 RUN rm -f /root/*.tar.gz \
     && rm -f /root/*.zip \
     && rm -f /opt/*.tar.gz \
-    && rm -f /opt/*.zip
+    && rm -f /opt/*.zip \
+    && rm -f /tmp/*.tar.gz \
+    && rm -f /tmp/*.zip 
 
 #-----------------------------------------------------------------------------
 # Set PORT Docker Container
