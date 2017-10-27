@@ -2,6 +2,8 @@
 
 Docker CentOS Test (Alpha Version), not ready for production.
 
+This docker image includes:
+
 ## Features:
 * bash (+ themes)
 * oh-my-zsh (+ themes)
@@ -23,7 +25,8 @@ Docker CentOS Test (Alpha Version), not ready for production.
   - [X] grunt
   - [X] gulp
   - [X] yeoman
-* composer
+* composer (dependency manager for PHP)
+* python 3.5
 
 ## Configuration:
 * Generate ssh key for your access:
