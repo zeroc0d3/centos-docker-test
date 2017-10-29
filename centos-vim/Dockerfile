@@ -42,22 +42,6 @@ RUN yum -y install \
 RUN yum clean all
 
 #-----------------------------------------------------------------------------
-# Prepare Install Ruby
-# -) copy .zshrc to /root
-# -) copy .bashrc to /root
-#-----------------------------------------------------------------------------
-# RUN git clone https://github.com/zeroc0d3/ruby-installation /opt/ruby_installer 
-
-# COPY ./rootfs/root/.zshrc /root/.zshrc
-# COPY ./rootfs/root/.bashrc /root/.bashrc
-# RUN sudo /bin/sh /opt/ruby_installer/install_ruby.sh
-
-#-----------------------------------------------------------------------------
-# Install Ruby Packages (rbenv/rvm)
-#-----------------------------------------------------------------------------
-# RUN sudo /bin/sh /opt/ruby_installer/gems.sh
-
-#-----------------------------------------------------------------------------
 # Download & Install
 # -) lua
 # -) luarocks
@@ -67,18 +51,6 @@ RUN yum clean all
 COPY ./rootfs/opt/install_vim.sh /opt/install_vim.sh
 # RUN sudo /bin/sh /opt/install_vim.sh
     
-#-----------------------------------------------------------------------------
-# Install Python 3.5
-#-----------------------------------------------------------------------------
-# RUN yum -y install https://centos7.iuscommunity.org/ius-release.rpm \
-#     && yum -y update \
-#     && yum -y install python35u python35u-libs python35u-devel python35u-pip 
-
-#-----------------------------------------------------------------------------
-# Clean Up All Cache
-#-----------------------------------------------------------------------------
-# RUN yum clean all
-
 #-----------------------------------------------------------------------------
 # Install Lua
 #-----------------------------------------------------------------------------
@@ -126,6 +98,14 @@ RUN git clone https://github.com/dracula/vim.git /opt/vim-themes/dracula \
 
 RUN tar zcvf vim.tar.gz /root/vim /root/.vim \
     && mv vim.tar.gz /opt
+
+# -----------------------------------------------------------------------------
+# UTC Timezone & Networking
+# -----------------------------------------------------------------------------
+RUN ln -sf \
+		/usr/share/zoneinfo/UTC \
+		/etc/localtime \
+	&& echo "NETWORKING=yes" > /etc/sysconfig/network
 
 #-----------------------------------------------------------------------------
 # Set Configuration
