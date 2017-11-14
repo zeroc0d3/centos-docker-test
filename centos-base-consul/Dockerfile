@@ -52,5 +52,5 @@ RUN rm -f /root/*.tar.gz \
 #-----------------------------------------------------------------------------
 # Check Docker Container
 #-----------------------------------------------------------------------------
-HEALTHCHECK CMD /etc/cont-consul/check || exit 1
 # HEALTHCHECK CMD [ $(curl -sI -w '%{http_code}' --out /dev/null http://localhost:8500/v1/agent/self) == "200" ] || exit 1
+HEALTHCHECK CMD --interval=5m --timeout=3s /etc/cont-consul/check || exit 1

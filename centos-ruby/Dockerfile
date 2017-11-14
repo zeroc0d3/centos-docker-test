@@ -4,7 +4,7 @@ MAINTAINER ZeroC0D3 Team <zeroc0d3.team@gmail.com>
 #-----------------------------------------------------------------------------
 # Set Environment
 #-----------------------------------------------------------------------------
-ENV RUBY_VERSION=2.4.2 \
+ENV RUBY_VERSION=2.4.1 \
     PATH_HOME=/home/docker \
     PATH_WORKSPACE=/home/docker/workspace
 
@@ -92,3 +92,9 @@ VOLUME [${PATH_WORKSPACE}]
 #-----------------------------------------------------------------------------
 ENTRYPOINT ["/init"]
 CMD []
+
+#-----------------------------------------------------------------------------
+# Check Docker Container
+#-----------------------------------------------------------------------------
+# HEALTHCHECK CMD [ $(curl -sI -w '%{http_code}' --out /dev/null http://localhost:8500/v1/agent/self) == "200" ] || exit 1
+HEALTHCHECK CMD --interval=5m --timeout=3s /etc/cont-consul/check || exit 1

@@ -34,7 +34,7 @@ PATH_APPLICATION=/home/docker/workspace
 # ==============================================
 #   RUBY (Environments)
 # ==============================================
-RUBY_VERSION=2.4.2
+RUBY_VERSION=2.4.1
 RUBY_PACKAGE=rbenv
 RUBY_PORT=2222
 
